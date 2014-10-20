@@ -1,44 +1,39 @@
-import AVFoundation
 import Cocoa
+import AVFoundation
 
 
-var app=NSApplication.sharedApplication()
-app.run()
-
-
-let path="/music/"
 var error:NSError?
 
+let manager=NSFileManager.defaultManager()
 
-var directory=NSFileManager.defaultManager()
+let basePath="/music/"
+
+var files=manager.contentsOfDirectoryAtPath(basePath,error:&error)
 
 //var player:AVAudioPlayer?
 
-directory.changeCurrentDirectoryPath(path)
+var Qmain=dispatch_get_main_queue()
 
-for f in directory.contentsOfDirectoryAtPath(path,error:&error){
-	var file=f as String
-	if directory.fileExistsAtPath(file) && !file.pathExtension.isEmpty {
-		var data=NSData(contentsOfFile:path+file)
-		if data==nil {
-		}else{
+var app=NSApplication.sharedApplication()
 
-			dispatch_sync(dispatch_get_main_queue()){
-				var player=AVAudioPlayer(data:data,error:&error)
-			player.prepareToPlay()
-			player.play()
-			}
-			
-		}
-	}
-	break
+
+
+func play(f:String) {
+	//dispatch_sync(Qmain){
+		var player=AVAudioPlayer(contentsOfURL:NSURL(string:basePath+f),error:&error)
+		player.prepareToPlay()
+		player.play()
+	//}
 }
-sleep(20)
-//app.run()
+
+for file in files {
+	if file.pathExtension=="mp3" {
+		play(file as String)
+		sleep(30)
+	}
+}
 
 
-//var window:NSWindow=NSWindow(frame:CGRectMake(x,y,w,h),styleMask:NSTitledWindowMask,backing:NSBackingStoreType.NSBackingStoreRetained)
-//app.windows+=window
+app.run()
 
-
-
+sleep(60)

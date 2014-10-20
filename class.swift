@@ -41,18 +41,3 @@ class DB : Model {
 	
 }
 
-var instance:Model?
-var db:DB?
-
-for _ in 1...10{
-	instance=Model()
-	println(instance)
-	db=DB()
-	println(db)
-}
-
-var customer=Customer(firstname:"teric",lastname:"wei")
-println("fullname is \(customer.fullname)")
-
-
-
